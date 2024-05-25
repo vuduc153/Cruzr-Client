@@ -1,0 +1,147 @@
+<!-- https://webrtc.org/getting-started/peer-connections -->
+<!-- https://codelabs.developers.google.com/codelabs/webrtc-web/ -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <title>WebSocket Client</title>
+</head>
+<body class="bg-gray-100 text-gray-900">
+    <header class="bg-gray-700 text-white p-4">
+        <div class="container mx-auto">
+            <h1 class="text-3xl font-bold">WebSocket Client</h1>
+        </div>
+    </header>
+    <main class="container mx-auto my-8">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <!-- Video Element -->
+            <div class="col-span-1 md:col-span-2">
+                <section class="w-full bg-white p-4 rounded shadow">
+                    <video id="remoteVideo" autoplay playsinline class="w-full h-128 bg-gray-200"></video>
+                    
+                    <div class="w-full flex justify-center pt-4">
+                        <div>
+                            <button type="button" class="text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2" id="callBtn" onclick="makeCall()">Connect</button>
+
+                            <button type="button" class="text-white bg-gradient-to-r from-red-400 via-red-500 to-red-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 cursor-not-allowed" id="closeBtn" onclick="closeConnection()" disabled>Disconnect</button>
+                        </div>
+                    </div>
+                </section>
+                <section class="w-full bg-white p-4 rounded shadow mt-4">
+                    <h2 class="text-xl font-bold mb-4">Log</h2>
+                    <div class="text-gray-700" id="messages"></div>
+                </section>
+            </div>
+            
+
+            <!-- Cards -->
+            <section class="grid grid-cols-1 gap-4">
+                <div class="bg-white p-4 rounded shadow">
+                    <h2 class="text-xl font-bold mb-2">Preset action</h2>
+                    <div class="flex flex-wrap items-center">
+                        <button class="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded m-1 flex items-center" id="pose1" onclick="sendPresetCommand(this)">
+                            <i class="fas fa-hand-paper mr-2"></i> Salute
+                        </button>
+                        <button class="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded m-1 flex items-center" id="pose2" onclick="sendPresetCommand(this)">
+                            <i class="fas fa-hands mr-2"></i> Gesticulate
+                        </button>
+                        <button class="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded m-1 flex items-center" id="pose3" onclick="sendPresetCommand(this)">
+                            <i class="fas fa-person-shrug mr-2"></i> Whatever
+                        </button>
+                        <button class="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded m-1 flex items-center" id="hug" onclick="sendPresetCommand(this)">
+                            <i class="fas fa-hands mr-2"></i> Hug
+                        </button>
+                        <button class="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded m-1 flex items-center" id="shankhand" onclick="sendPresetCommand(this)">
+                            <i class="fas fa-handshake mr-2"></i> Handshake
+                        </button>
+                        <button class="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded m-1 flex items-center" id="goodbye" onclick="sendPresetCommand(this)">
+                            <i class="fas fa-hand-wave mr-2"></i> Goodbye
+                        </button>
+                        <button class="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded m-1 flex items-center" id="nod" onclick="sendPresetCommand(this)">
+                            <i class="fas fa-head-side-cough mr-2"></i> Nod
+                        </button>
+                        <button class="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded m-1 flex items-center" id="applause" onclick="sendPresetCommand(this)">
+                            <i class="fas fa-hands-clap mr-2"></i> Clap
+                        </button>
+                        <button class="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded m-1 flex items-center" id="zhuatou" onclick="sendPresetCommand(this)">
+                            <i class="fas fa-head-side-mask mr-2"></i> Scratch head
+                        </button>
+                        <button class="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded m-1 flex items-center" id="guideright" onclick="sendPresetCommand(this)">
+                            <i class="fas fa-arrow-right mr-2"></i> Walk right
+                        </button>
+                        <button class="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded m-1 flex items-center" id="guideleft" onclick="sendPresetCommand(this)">
+                            <i class="fas fa-arrow-left mr-2"></i> Walk left
+                        </button>
+                        <button class="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded m-1 flex items-center" id="cute" onclick="sendPresetCommand(this)">
+                            <i class="fas fa-smile mr-2"></i> Cute
+                        </button>
+                        <button class="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded m-1 flex items-center" id="fendou" onclick="sendPresetCommand(this)">
+                            <i class="fas fa-hand-rock mr-2"></i> Fight
+                        </button>
+                        <button class="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded m-1 flex items-center" id="zhanggao" onclick="sendPresetCommand(this)">
+                            <i class="fas fa-arrow-up mr-2"></i> Grow
+                        </button>
+                        <button class="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded m-1 flex items-center" id="swingarm" onclick="sendPresetCommand(this)">
+                            <i class="fas fa-arrows-alt mr-2"></i> Swing arms
+                        </button>
+                        <button class="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded m-1 flex items-center" id="searching" onclick="sendPresetCommand(this)">
+                            <i class="fas fa-search mr-2"></i> Search
+                        </button>
+                        <button class="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded m-1 flex items-center" id="fadai" onclick="sendPresetCommand(this)">
+                            <i class="fas fa-meh-blank mr-2"></i> Zone out
+                        </button>
+                        <button class="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded m-1 flex items-center" id="tiaowang" onclick="sendPresetCommand(this)">
+                            <i class="fas fa-binoculars mr-2"></i> Survey
+                        </button>
+                        <button class="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded m-1 flex items-center" id="longzhuashou" onclick="sendPresetCommand(this)">
+                            <i class="fas fa-hand-holding mr-2"></i> Grab
+                        </button>
+                        <button class="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded m-1 flex items-center" id="baohu" onclick="sendPresetCommand(this)">
+                            <i class="fas fa-shield-alt mr-2"></i> Protect
+                        </button>
+                        <button class="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded m-1 flex items-center" id="surprise" onclick="sendPresetCommand(this)">
+                            <i class="fas fa-lightbulb mr-2"></i> Wonder
+                        </button>
+                        <button class="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded m-1 flex items-center" id="zhilu" onclick="sendPresetCommand(this)">
+                            <i class="fas fa-directions mr-2"></i> Guide
+                        </button>
+                        <button class="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded m-1 flex items-center" id="shy" onclick="sendPresetCommand(this)">
+                            <i class="fas fa-flushed mr-2"></i> Shy
+                        </button>
+                        <button class="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded m-1 flex items-center" id="command" onclick="sendPresetCommand(this)">
+                            <i class="fas fa-music mr-2"></i> Conduct
+                        </button>
+                        <button class="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded m-1 flex items-center" id="commandover" onclick="sendPresetCommand(this)">
+                            <i class="fas fa-check-double mr-2"></i> End conducting
+                        </button>
+                        <button class="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded m-1 flex items-center" id="walk" onclick="sendPresetCommand(this)">
+                            <i class="fas fa-walking mr-2"></i> Walk
+                        </button>
+                        <button class="bg-gray-500 hover:bg-gray-600 text-white py-2 px-4 rounded m-1 flex items-center" id="reset" onclick="sendStopActionCommand()">
+                            <i class="fas fa-undo mr-2"></i> Reset
+                        </button>
+                    </div>
+                </div>
+                <div class="bg-white p-4 rounded shadow">
+                    <h2 class="text-xl font-bold mb-4">Expression</h2>
+                    <div class="space-x-2">
+                        <button class="bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded" id="face_smile" onclick="sendExpressionCommand(this)">Happy</button>
+                        <button class="bg-violet-500 hover:bg-violet-600 text-white py-2 px-4 rounded" id="face_wronged" onclick="sendExpressionCommand(this)">Cry</button>
+                        <button class="bg-yellow-500 hover:bg-yellow-600 text-white py-2 px-4 rounded" id="face_proud" onclick="sendExpressionCommand(this)">Proud</button>
+                        <button class="bg-red-500 hover:bg-red-600 text-white py-2 px-4 rounded" id="face_upset" onclick="sendExpressionCommand(this)">Upset</button>
+                        <button class="bg-gray-500 hover:bg-gray-600 text-white py-2 px-4 rounded" id="clear" onclick="sendStopExpressionCommand()">Clear</button>
+                    </div>
+                </div>
+                <div class="bg-white p-4 rounded shadow">
+                    <h2 class="text-xl font-bold mb-2">Speech</h2>
+                    <textarea class="w-full max-w-lg p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" rows="5" placeholder="Enter your text here"></textarea>
+                </div>
+            </section>
+        </div>
+    </main>
+</body>
+<script src="https://cdn.tailwindcss.com"></script>
+<script type="text/javascript" src="main.js"></script>
+</html>
