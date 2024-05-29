@@ -97,8 +97,8 @@ function getDirections() {
     for (const item of activeKeys) {
         if (item == 'w') dir[0] = 1;
         if (item == 's') dir[0] = -1;
-        if (item == 'a') dir[1] = -1;
-        if (item == 'd') dir[1] = 1;
+        if (item == 'a') dir[1] = 1;
+        if (item == 'd') dir[1] = -1;
         if (item == 'q') dir[2] = 1;
         if (item == 'e') dir[2] = -1;
     }
