@@ -1,11 +1,11 @@
 "use strict";
 
 // Replace with the IP address of your Android device running the server
-const X_VELOCITY = 0.1;
-const Y_VELOCITY = 0.1;
-const ROTATION_VELOCITY = 0.2;
+const X_VELOCITY = 0.2;
+const Y_VELOCITY = 0.2;
+const ROTATION_VELOCITY = 0.4;
 const REMOTE_SPEAKER_VOLUME = 0.5;
-const wsUrl = "wss://10.100.239.70:8080";
+const wsUrl = "wss://10.100.236.144:8080";
 const ws = new WebSocket(wsUrl);
 const remoteVideo = document.getElementById('remoteVideo');
 const callBtn = document.getElementById('callBtn');
