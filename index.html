@@ -9,9 +9,12 @@
     <title>WebSocket Client</title>
 </head>
 <body class="bg-gray-100 text-gray-900">
-    <header class="bg-gray-700 text-white p-4">
-        <div class="container mx-auto">
-            <h1 class="text-3xl font-bold">WebSocket Client</h1>
+    <header class="bg-gray-700 text-white p-4 flex items-center">
+        <h1 class="text-2xl font-bold mr-8">WebSocket Client</h1>
+        <div class="flex items-center">
+            <input type="text" id="ip" placeholder="Enter IP from Cruzr App" class="p-2 rounded border border-gray-400 mr-2 text-black">
+            <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" id="connectBtn" onclick="connectAndMakeCall()">Connect</button>
+            <button class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded" style="display: none" id="disconnectBtn" onclick="disconnect()">Disconnect</button>
         </div>
     </header>
     <main class="container mx-auto my-8">
@@ -19,15 +22,7 @@
             <!-- Video Element -->
             <div class="col-span-1 md:col-span-2">
                 <section class="w-full bg-white p-4 rounded shadow">
-                    <video id="remoteVideo" autoplay playsinline class="w-full h-128 bg-gray-200"></video>
-                    
-                    <div class="w-full flex justify-center pt-4">
-                        <div>
-                            <button type="button" class="text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2" id="callBtn" onclick="makeCall()">Connect</button>
-
-                            <button type="button" class="text-white bg-gradient-to-r from-red-400 via-red-500 to-red-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 cursor-not-allowed" id="closeBtn" onclick="closeConnection()" disabled>Disconnect</button>
-                        </div>
-                    </div>
+                    <video id="remoteVideo" tabindex="0" autoplay playsinline class="w-full h-128 bg-gray-200" style="outline: none"></video>
                 </section>
                 <section class="w-full bg-white p-4 rounded shadow mt-4">
                     <h2 class="text-xl font-bold mb-4">Log</h2>
