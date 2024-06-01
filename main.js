@@ -3,7 +3,7 @@
 // Replace with the IP address of your Android device running the server
 const X_VELOCITY = 0.2;
 const Y_VELOCITY = 0.2;
-const ROTATION_VELOCITY = 0.4;
+const ROTATION_VELOCITY = 0.2;
 const REMOTE_SPEAKER_VOLUME = 0.5;
 
 const remoteVideo = document.getElementById('remoteVideo');
@@ -63,7 +63,7 @@ function connectAndMakeCall() {
 }
 
 function logMessage(message) {
-    consoleg.log(message);
+    console.log(message);
     const messageElement = document.createElement('div');
     messageElement.textContent = message;
     messagesDiv.appendChild(messageElement);
