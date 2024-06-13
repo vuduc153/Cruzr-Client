@@ -11,6 +11,9 @@ const connectBtn = document.getElementById('connectBtn');
 const disconnectBtn = document.getElementById('disconnectBtn');
 const ipInput = document.getElementById('ip');
 const messagesDiv = document.getElementById('messages');
+const xInput = document.getElementById('coordinateX');
+const yInput = document.getElementById('coordinateY');
+const thetaInput = document.getElementById('coordinateTheta');
 
 let peerConnection = null;
 let ws = null;
@@ -184,6 +187,12 @@ remoteVideo.onkeyup = function(event) {
     }
 }
 
+thetaInput.onkeydown = function(event) {
+    if (event.key == 'Enter') {
+        sendNavigationCommand();
+    }
+}
+
 function sendMoveCommand(xDirection, yDirection, rotationDirection) {
     const msg = JSON.stringify({
         'type': 'move',
@@ -235,6 +244,15 @@ function sendStopExpressionCommand() {
         'type': 'expression',
         'params': []
     });
+    ws.send(msg);
+    console.log('Sent message: ' + msg);
+}
+
+function sendNavigationCommand() {
+    const msg = JSON.stringify({
+        'type': 'navigation',
+        'params': [parseFloat(xInput.value), parseFloat(yInput.value), parseFloat(thetaInput.value)]
+    })
     ws.send(msg);
     console.log('Sent message: ' + msg);
 }
