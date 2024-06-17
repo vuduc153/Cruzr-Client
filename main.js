@@ -5,6 +5,10 @@ const X_VELOCITY = 0.2;
 const Y_VELOCITY = 0.2;
 const ROTATION_VELOCITY = 0.2;
 const REMOTE_SPEAKER_VOLUME = 0.5;
+const MODE = {
+    NAVIGATION: 0,
+    LOCALIZATION: 1
+}
 
 const remoteVideo = document.getElementById('remoteVideo');
 const connectBtn = document.getElementById('connectBtn');
@@ -14,9 +18,18 @@ const messagesDiv = document.getElementById('messages');
 const xInput = document.getElementById('coordinateX');
 const yInput = document.getElementById('coordinateY');
 const thetaInput = document.getElementById('coordinateTheta');
+const mapImg = document.getElementById('map');
+const coordOutput = document.getElementById('coord-output');
+const localizeBtn = document.getElementById('localizeBtn');
+const navBtn = document.getElementById('navBtn');
 
 let peerConnection = null;
 let ws = null;
+let mode = null;
+let localizeCoord = null;
+let navCoord = null;
+let localizeMarker = null;
+let navMarker = null;
 let activeKeys = new Set();
 
 // WebSocket Connection
@@ -187,6 +200,67 @@ remoteVideo.onkeyup = function(event) {
     }
 }
 
+localizeBtn.onclick = function() {
+    if (mode !== null && mode == MODE.LOCALIZATION) {
+        mode = null;
+        localizeBtn.classList.remove('btn-active');
+    } else {
+        mode = MODE.LOCALIZATION;
+        resetButtons();
+        localizeBtn.classList.add('btn-active');
+    }
+}
+
+navBtn.onclick = function() {
+    if (mode !== null && mode == MODE.NAVIGATION) {
+        mode = null;
+        navBtn.classList.remove('btn-active');
+    } else {
+        mode = MODE.NAVIGATION;
+        resetButtons();
+        navBtn.classList.add('btn-active');
+    }
+}
+
+map.onclick = function(event) {
+    if (mode == null) return;
+    
+    const rect = map.getBoundingClientRect();
+    
+    const x = event.clientX - rect.left;
+    const y = event.clientY - rect.top;
+
+    const xPercent = (x / rect.width) * 100;
+    const yPercent = 100 - (y / rect.height) * 100; // map coordinate in ROS has its origin in the bottom left corner
+
+    coordOutput.textContent = `X: ${xPercent.toFixed(2)}%, Y: ${yPercent.toFixed(2)}%`;
+
+
+    if (mode == MODE.LOCALIZATION) {
+        if (localizeMarker) {
+            localizeMarker.remove();
+        }
+        localizeMarker = document.createElement("div");
+        localizeMarker.classList.add("marker", "red-marker");
+        localizeMarker.style.left = `calc(${xPercent}% - 5px)`;
+        localizeMarker.style.bottom = `calc(${yPercent}% - 5px)`;
+        document.getElementById("image-container").appendChild(localizeMarker);
+        localizeCoord = { xPercent, yPercent };
+        console.log(localizeCoord);
+    } else {
+        if (navMarker) {
+            navMarker.remove();
+        }
+        navMarker = document.createElement("div");
+        navMarker.classList.add("marker", "blue-marker");
+        navMarker.style.left = `calc(${xPercent}% - 5px)`;
+        navMarker.style.bottom = `calc(${yPercent}% - 5px)`;
+        document.getElementById("image-container").appendChild(navMarker);
+        navCoord = { xPercent, yPercent };
+        console.log(navCoord);
+    }
+}
+
 thetaInput.onkeydown = function(event) {
     if (event.key == 'Enter') {
         sendNavigationCommand();
@@ -268,4 +342,9 @@ function getDirections() {
         if (item == 'e') dir[2] = -1;
     }
     return dir;
+}
+
+function resetButtons() {
+    localizeBtn.classList.remove("btn-active");
+    navBtn.classList.remove("btn-active");
 }
