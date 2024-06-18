@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+
+<style>
+.container {
+    position: relative;
+    display: inline-block;
+}
+
+.marker {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+}
+
+.red-marker {
+    background-color: red;
+}
+
+.blue-marker {
+    background-color: blue;
+}
+</style>
+
+<script src="https://cdn.jsdelivr.net/npm/easeljs@1/lib/easeljs.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/eventemitter2@6/lib/eventemitter2.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/roslib@1/build/roslib.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/ros2d@0/build/ros2d.js"></script>
+<script>
+  /**
+   * Setup all visualization elements when the page is loaded.
+   */
+  function init() {
+    // Connect to ROS.
+    var ros = new ROSLIB.Ros({
+      url : 'ws://10.100.239.107:9090'
+    });
+
+    // Create the main viewer.
+    var viewer = new ROS2D.Viewer({
+      divID : 'map',
+      width : 640,
+      height : 480,
+    });
+
+    // Setup the map client.
+    var gridClient = new ROS2D.OccupancyGridClient({
+      ros : ros,
+      rootObject : viewer.scene,
+      // Use this property in case of continuous updates
+      continuous: true
+    });
+    // Scale the canvas to fit to the map
+    gridClient.on('change', function() {
+      viewer.scaleToDimensions(gridClient.currentGrid.width, gridClient.currentGrid.height);
+      viewer.shift(gridClient.currentGrid.pose.position.x, gridClient.currentGrid.pose.position.y);
+    });
+  }
+</script>
+</head>
+
+<body onload="init()">
+  <h1>Simple Draw Example</h1>
+  <p>
+    Click on the canvas to draw.<br>
+    Ctrl-click a line to split it, shift-click a point to remove it.<br>
+    Points are draggable.
+  </p>
+  <div id="map" class="container">
+      
+  </div>
+</body>
+<script>
+const MODE = {
+    NAVIGATION: 0,
+    LOCALIZATION: 1
+}
+
+const map = document.getElementById('map');
+const mode = MODE.LOCALIZATION;
+
+let localizeMarker;
+let navMarker;
+
+map.onclick = function(event) {
+    if (mode == null) return;
+    
+    const rect = map.getBoundingClientRect();
+    
+    const x = event.clientX - rect.left;
+    const y = event.clientY - rect.top;
+
+    const xPercent = (x / rect.width) * 100;
+    const yPercent = 100 - (y / rect.height) * 100; // map coordinate in ROS has its origin in the bottom left corner
+
+    // coordOutput.textContent = `X: ${xPercent.toFixed(2)}%, Y: ${yPercent.toFixed(2)}%`;
+
+
+    if (mode == MODE.LOCALIZATION) {
+        if (localizeMarker) {
+            localizeMarker.remove();
+        }
+        localizeMarker = document.createElement("div");
+        localizeMarker.classList.add("marker", "red-marker");
+        localizeMarker.style.left = `calc(${xPercent}% - 5px)`;
+        localizeMarker.style.bottom = `calc(${yPercent}% - 5px)`;
+        document.getElementById("map").appendChild(localizeMarker);
+        // localizeCoord = { xPercent, yPercent };
+        // console.log(localizeCoord);
+    } else {
+        if (navMarker) {
+            navMarker.remove();
+        }
+        navMarker = document.createElement("div");
+        navMarker.classList.add("marker", "blue-marker");
+        navMarker.style.left = `calc(${xPercent}% - 5px)`;
+        navMarker.style.bottom = `calc(${yPercent}% - 5px)`;
+        document.getElementById("map").appendChild(navMarker);
+        // navCoord = { xPercent, yPercent };
+        // console.log(navCoord);
+    }
+}
+</script>
+</html>
