@@ -74,6 +74,7 @@ NAV2D.ImageMapClientNav = function(options) {
   var viewer = options.viewer;
   var withOrientation = options.withOrientation || false;
   var old_state = null;
+  var arrow_size = options.arrow_size || 25;
 
   // setup a client to get the map
   var client = new ROS2D.ImageMapClient({
@@ -91,7 +92,8 @@ NAV2D.ImageMapClientNav = function(options) {
     robot_pose : robot_pose,
     rootObject: rootObject,
     withOrientation: withOrientation,
-    image: image
+    image: image,
+    arrow_size: arrow_size
   });
 
   client.on('change', function() {
@@ -132,6 +134,7 @@ NAV2D.Navigator = function(options) {
   var actionName = options.actionName || 'move_base_msgs/MoveBaseAction';
   var withOrientation = options.withOrientation || false;
   var use_image = options.image;
+  var arrow_size = options.arrow_size || 25;
   this.rootObject = options.rootObject || new createjs.Container();
 
   this.goalMarker = null;
@@ -178,7 +181,7 @@ NAV2D.Navigator = function(options) {
         });
       } else {
         that.goalMarker = new ROS2D.NavigationArrow({
-          size: 15,
+          size: 0.6 * arrow_size,
           strokeSize: 1,
           fillColor: createjs.Graphics.getRGB(255, 64, 128, 0.66),
           pulse: true
@@ -224,7 +227,7 @@ NAV2D.Navigator = function(options) {
     });
   } else {
     robotMarker = new ROS2D.NavigationArrow({
-      size : 25,
+      size : arrow_size,
       strokeSize : 1,
       fillColor : createjs.Graphics.getRGB(255, 128, 0, 0.66),
       pulse : true
@@ -319,7 +322,7 @@ NAV2D.Navigator = function(options) {
             });
           } else {
             orientationMarker = new ROS2D.NavigationArrow({
-              size : 25,
+              size : arrow_size,
               strokeSize : 1,
               fillColor : createjs.Graphics.getRGB(0, 255, 0, 0.66),
               pulse : false
@@ -435,6 +438,7 @@ NAV2D.OccupancyGridClientNav = function(options) {
   var withOrientation = options.withOrientation || false;
   var image = options.image || false;
   var old_state = null;
+  var arrow_size = options.arrow_size || 25;
 
   // setup a client to get the map
   var client = new ROS2D.OccupancyGridClient({
@@ -452,7 +456,8 @@ NAV2D.OccupancyGridClientNav = function(options) {
     robot_pose : robot_pose,
     rootObject: rootObject,
     withOrientation: withOrientation,
-    image: image
+    image: image,
+    arrow_size: arrow_size
   });
 
   client.on('change', function() {
