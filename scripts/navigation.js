@@ -90,13 +90,14 @@ const ROBOT_DIAMETER = 0.65;
 function initMap() {
 
     const navContainer = document.getElementById('nav');
+    const cancelBtn = document.getElementById('cancelBtn');
 
     // Clean up DOM element from previous render (e.g., last onresize event)
     navContainer.innerHTML = '';
 
     // Connect to ROS.
     var ros = new ROSLIB.Ros({
-      url : 'ws://localhost:9090'
+      url : 'ws://cruiser-desktop:9090'
     });
 
     var listener = new ROSLIB.Topic({
@@ -117,14 +118,19 @@ function initMap() {
       });
 
       // Setup the nav client.
-      var nav = NAV2D.OccupancyGridClientNav({
+      var navClient = new NAV2D.OccupancyGridClientNav({
         ros : ros,
         rootObject : viewer.scene,
         viewer : viewer,
-        serverName : '/pr2_move_base',
+        serverName : '/move_base',
         withOrientation: true,
         arrow_size: ROBOT_DIAMETER / message.info.resolution * scaleFactor
       });
+
+
+      cancelBtn.onclick = function() {
+        navClient.navigator.cancelGoal();
+      }
       
 
       listener.unsubscribe();

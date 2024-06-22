@@ -84,7 +84,7 @@ NAV2D.ImageMapClientNav = function(options) {
     image : image_map
   });
 
-  var navigator = new NAV2D.Navigator({
+  this.navigator = new NAV2D.Navigator({
     ros: ros,
     tfClient: tfClient,
     serverName: serverName,
@@ -197,6 +197,7 @@ NAV2D.Navigator = function(options) {
 
     goal.on('result', function() {
       that.rootObject.removeChild(that.goalMarker);
+      that.goalMarker = null;
     });
   }
   
@@ -448,7 +449,7 @@ NAV2D.OccupancyGridClientNav = function(options) {
     topic : map_topic
   });
 
-  var navigator = new NAV2D.Navigator({
+  this.navigator = new NAV2D.Navigator({
     ros: ros,
     tfClient: tfClient,
     serverName: serverName,
