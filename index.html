@@ -147,6 +147,17 @@
                 <div class="bg-white p-4 rounded shadow">
                     <h2 class="text-xl font-bold mb-4">Speech</h2>
                     <textarea class="w-full max-w-lg p-2 bg-gray-200 text-gray-700 border border-gray-200 rounded focus:outline-none focus:bg-white focus:border-gray-500" rows="5" placeholder="Enter your text here"></textarea>
+                    <div class="flex">
+                        <!-- <button class="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded m-1 flex items-center" id="localizeBtn">
+                            <i class="fas fa-arrows-alt mr-2"></i> Localize
+                        </button>
+                        <button class="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded m-1 flex items-center" id="navBtn">
+                            <i class="fa-solid fa-location-dot mr-2"></i> Navigate
+                        </button> -->
+                        <button class="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded m-1 flex items-center" id="speechBtn" onclick="promptBuilder()">
+                            Send
+                        </button>
+                    </div>
                 </div>
                 <div class="bg-white p-4 rounded shadow">
                     <h2 class="text-xl font-bold mb-4">Log</h2>
@@ -164,4 +175,5 @@
 <script src="scripts/nav2d.min.js"></script>
 <script type="text/javascript" src="scripts/navigation.js"></script>
 <script type="text/javascript" src="scripts/main.js"></script>
+<script type="text/javascript" src="scripts/prompt_builder.js"></script>
 </html>

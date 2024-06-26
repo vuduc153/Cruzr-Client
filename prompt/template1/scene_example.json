@@ -1,0 +1,38 @@
+{
+	"function": "office building",
+	"additional_detail": "",
+	"rooms": [
+		{
+			"coordinate": [100, 120, 0],
+			"scene_category": "archives",
+			"additional_detail": "",
+			"objects": [
+				{
+					"class_": "workstation",
+					"coordinate": [220, 110, 0],
+					"additional_detail": "Dan's workstation"
+				}, {
+					"class_": "camera",
+					"coordinate": [180, 80, 0],
+					"additional_detail": "kinect camera"
+				}, {
+					"class_": "reports",
+					"coordinate": [170, 120, 0],
+					"additional_detail": ""
+				}
+			]
+		},
+		{
+			"coordinate": [100, 400, 0],
+			"scene_category": "storage room",
+			"additional_detail": "",
+			"objects": [
+				{
+					"class_": "keys",
+					"coordinate": [220, 180, 0],
+					"additional_detail": "keys to the archives"
+				}
+			]
+		}
+	]
+}

@@ -1,0 +1,16 @@
+[{
+	"actor": A,
+	"target": {
+		"label": TARGET_LABEL,
+		"coordinate": TARGET_COORDINATE,
+		"additional_detail": DETAIL_ABOUT_THE_TARGET
+	}
+}, 
+{
+	"actor": B,
+	"target": {
+		"label": TARGET_LABEL,
+		"coordinate": TARGET_COORDINATE,
+		"additional_detail": DETAIL_ABOUT_THE_TARGET
+	}
+}]

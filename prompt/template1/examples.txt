@@ -1,0 +1,90 @@
+Prompt 1:
+=== SCENE REPRESENTATION ===
+[%SCENE REPRESENTATION%]
+=== PAST DIALOGUE ===
+=== CURRENT DIALOGUE ===
+Location (100, 100, 0.2)
+A: "Morning! Did you get a chance to look over the figures I sent yesterday?"
+B: "Hi! Yes, I did. Your projections are solid, but I think we need to double-check the data source for Q2. It seems a bit off."
+=== CONSTRAINT ===
+[%CONSTRAINT%]
+Answer:
+It can’t be deducted from the conversation that any of the people will be going anywhere after this, so the answer will be an empty list [].
+
+Prompt 2:
+=== SCENE REPRESENTATION ===
+[%SCENE REPRESENTATION%]
+=== PAST DIALOGUE ===
+Location (100, 100, 0.2)
+A: "Morning! Did you get a chance to look over the figures I sent yesterday?"
+B: "Hi! Yes, I did. Your projections are solid, but I think we need to double-check the data source for Q2. It seems a bit off."
+=== CURRENT DIALOGUE ===
+Location (100, 100, 0.2)
+A: "Good point. How about we go pull out the original reports? It's the best way to verify the numbers."
+B: "Agreed. Let's head there. We might find more insights with the raw data in hand."
+A: "Perfect. I'll go grab the keys to the archives. Last time, some of the files were mislabeled, so it might take a bit of digging."
+=== CONSTRAINT ===
+[%CONSTRAINT%]
+Answer:
+Both A and B will go get the reports in the archives at [170, 120, 0] after this; but before that, A will have to go to get the keys to the archives at [220, 180, 0]. So the answer will be:
+[{
+	"actor": A,
+	"target": {
+		"label": "keys",
+		"coordinate": [220, 180, 0],
+		"additional_detail": "key to the archives"
+	}
+}, 
+{
+	"actor": A,
+	"target": {
+		"label": "reports",
+		"coordinate": [170, 120, 0],
+		"additional_detail": ""
+	}
+},
+{
+	"actor": B,
+	"target": {
+		"label": "reports",
+		"coordinate": [170, 120, 0],
+		"additional_detail": ""
+	}
+}]
+
+Prompt 3:
+=== SCENE REPRESENTATION ===
+[%SCENE REPRESENTATION%]
+=== PAST DIALOGUE ===
+Location (100, 100, 0.2)
+A: "Morning! Did you get a chance to look over the figures I sent yesterday?"
+B: "Hi! Yes, I did. Your projections are solid, but I think we need to double-check the data source for Q2. It seems a bit off."
+Location (100, 100, 0.2)
+A: "Good point. How about we go pull out the original reports? It's the best way to verify the numbers."
+B: "Agreed. Let's head there. We might find more insights with the raw data in hand."
+A: "Perfect. I'll go grab the keys to the archives. Last time, some of the files were mislabeled, so it might take a bit of digging."
+=== CURRENT DIALOGUE ===
+Location (170, 120, 0)
+B: "The numbers are matching up. Looks like our initial analysis was correct. This is a relief."
+A: "Great work! I'll stay here a bit longer to reorganize these files for next time. Could you take the verified reports back up?"
+B: "Sure thing. I will put the keys back when I’m at it. See you back upstairs.”
+=== CONSTRAINT ===
+[%CONSTRAINT%]
+Answer:
+The two people were originally at [100, 100, 0.2], and B will be returning there, but not before returning the keys to their original location at [220, 180, 0]. A will stay in the new location, so the answer will be 
+[{
+	"actor": B,
+	"target": {
+		"label": "keys",
+		"coordinate": [220, 180, 0],
+		"additional_detail": "key to the archives"
+	}
+}, 
+{
+	"actor": B,
+	"target": {
+		"label": "",
+		"coordinate": [100, 100, 0.2],
+		"additional_detail": ""
+	}
+}]
