@@ -87,6 +87,9 @@
 
 const ROBOT_DIAMETER = 0.65;
 
+// Re-render the map on window resize
+window.onresize = initMap;
+
 function initMap() {
 
     const navContainer = document.getElementById('nav');
@@ -94,11 +97,6 @@ function initMap() {
 
     // Clean up DOM element from previous render (e.g., last onresize event)
     navContainer.innerHTML = '';
-
-    // Connect to ROS.
-    var ros = new ROSLIB.Ros({
-      url : 'ws://cruiser-desktop:9090'
-    });
 
     var listener = new ROSLIB.Topic({
       ros : ros,
@@ -131,8 +129,21 @@ function initMap() {
       cancelBtn.onclick = function() {
         navClient.navigator.cancelGoal();
       }
-      
 
       listener.unsubscribe();
     });
+}
+
+
+function showMapBlock() {
+  const mapOverlay = document.getElementById('mapOverlay');
+  mapOverlay.style.display = 'block'; 
+}
+
+
+function hideMapBlock() {
+  const navContainer = document.getElementById('nav');
+  const mapOverlay = document.getElementById('mapOverlay');
+  navContainer.innerHTML = '';
+  mapOverlay.style.display = 'none';
 }
