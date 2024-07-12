@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="static/style.css">
     <title>WebSocket Client</title>
 </head>
-<body class="bg-gray-100 text-gray-900">
+<body class="bg-gray-100 text-gray-900 h-screen flex flex-col">
     <header class="bg-gray-700 text-white p-4 flex items-center">
         <h1 class="text-2xl font-bold mr-8">WebSocket Client</h1>
         <div class="flex items-center">
@@ -19,9 +19,9 @@
             <button class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded" style="display: none" id="disconnectBtn" onclick="disconnect()">Disconnect</button>
         </div>
     </header>
-    <main>
-        <div class="video-container">
-            <video id="remoteVideo" tabindex="0" autoplay playsinline class="w-full bg-gray-200" style="outline: none"></video>
+    <main class="relative h-full">
+        <div class="video-container absolute inset-0 flex items-center justify-center">
+            <video id="remoteVideo" tabindex="0" autoplay playsinline class="max-w-full h-full outline-none"></video>
 
             <div id="mapOverlay" class="overlay-map bg-white p-4 rounded shadow">
                 <div id="nav" class="w-full"></div>
