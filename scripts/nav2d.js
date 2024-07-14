@@ -160,7 +160,7 @@ NAV2D.Navigator = function(options) {
       goalMessage : {
         target_pose : {
           header : {
-            frame_id : '/map'
+            frame_id : 'map'
           },
           pose : pose
         }
@@ -228,7 +228,7 @@ NAV2D.Navigator = function(options) {
     });
   } else {
     robotMarker = new ROS2D.NavigationArrow({
-      size : arrow_size,
+      size : 0.6 * arrow_size,
       strokeSize : 1,
       fillColor : createjs.Graphics.getRGB(255, 128, 0, 0.66),
       pulse : true

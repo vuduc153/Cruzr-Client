@@ -122,6 +122,7 @@ function initMap() {
         viewer : viewer,
         serverName : '/move_base',
         withOrientation: true,
+        robot_pose: '/robot_pose_legacy',
         arrow_size: ROBOT_DIAMETER / message.info.resolution * scaleFactor
       });
 
