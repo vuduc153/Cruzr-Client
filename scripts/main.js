@@ -77,7 +77,7 @@ function initROSConnection() {
         logMessage('Connected to ROS server');
         setConnectedState(true);
         initMap();
-        initJoystick();
+        // initJoystick();
         showMapBlock();
     });
 

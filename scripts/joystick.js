@@ -29,7 +29,18 @@ function initJoystick() {
 
         const gamepad = navigator.getGamepads()[gamepad_idx];
 
+        const currentTime = new Date();
+        const secs = Math.floor(currentTime.getTime()/1000);
+        const nsecs = Math.round(1000000000*(currentTime.getTime()/1000-secs));
+
         let message = new ROSLIB.Message({
+            header: {
+                stamp: {
+                    secs: secs,
+                    nsecs: nsecs
+                },
+                frame_id: "web_joystick"
+            },
             axes: suppressAxisDrift(remapAxes(gamepad.axes)),
             buttons: remapButtons(gamepad.buttons)
         });
@@ -57,7 +68,7 @@ function initJoystick() {
     }
 
     function suppressAxisDrift(axes) {
-        return axes.map(item => Math.abs(item) < 0.1 ? 0: item);
+        return axes.map(item => Math.abs(item) < 0.2 ? 0: item);
     }
 
     setInterval(publishGamepadState, 100 /* 10 Hz */);
