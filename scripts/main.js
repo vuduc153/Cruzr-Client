@@ -51,7 +51,7 @@ function initAndroidConnection() {
 
         android.onclose = function() {
             logMessage('Disconnected from Android server');
-            closePeerConnection();
+            disconnect();
         };
 
         android.onerror = function(error) {
@@ -83,7 +83,7 @@ function initROSConnection() {
 
     ros.on("close", function() {
         logMessage('Disconnected from ROS server');
-        hideMapBlock();
+        disconnect();
     });
 
     ros.on("error", function(error) {
@@ -99,6 +99,8 @@ function logMessage(message) {
 function disconnect() {
     if (android) android.close();
     if (ros) ros.close();
+    closePeerConnection();
+    hideMapBlock();
     setConnectedState(false);
 }
 
