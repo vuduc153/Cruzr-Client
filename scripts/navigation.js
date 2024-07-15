@@ -127,7 +127,7 @@ function initMap() {
       });
 
 
-      cancelBtn.onclick = function() {
+      cancelBtn.onclick = () => {
         navClient.navigator.cancelGoal();
       }
 

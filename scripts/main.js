@@ -14,12 +14,16 @@ const ipInputROS = document.getElementById('ipROS');
 let peerConnection = null;
 let android = null;
 let ros = null;
+let backend = null;
 let activeKeys = new Set();
+
+initBackendConnection(); // TODO: delete this once ASR server is set up
 
 function initConnection() {
     try {
         initAndroidConnection();
         initROSConnection();
+        initBackendConnection();
     } catch(exception) {
         disconnect();
         logMessage(exception);
@@ -38,23 +42,23 @@ function initAndroidConnection() {
     if (ip) {
         android = new WebSocket(wsUrl);
 
-        android.onopen = function() {
+        android.onopen = () => {
             logMessage('Connected to Android server');
             setConnectedState(true);
             makeCall();
         };
 
-        android.onmessage = function(event) {
+        android.onmessage = event => {
             logMessage('Received message: ' + event.data);
             handleRTCMessage(event.data);
         };
 
-        android.onclose = function() {
+        android.onclose = () => {
             logMessage('Disconnected from Android server');
             disconnect();
         };
 
-        android.onerror = function(error) {
+        android.onerror = error => {
             logMessage('Android error: ');
             logMessage(error);
         };
@@ -73,7 +77,7 @@ function initROSConnection() {
         url : wsUrl
     });
 
-    ros.on("connection", function() {
+    ros.on("connection", () => {
         logMessage('Connected to ROS server');
         setConnectedState(true);
         initMap();
@@ -81,12 +85,12 @@ function initROSConnection() {
         showMapBlock();
     });
 
-    ros.on("close", function() {
+    ros.on("close", () => {
         logMessage('Disconnected from ROS server');
         disconnect();
     });
 
-    ros.on("error", function(error) {
+    ros.on("error", error => {
         logMessage('ROS error: ');
         logMessage(error);
     });
@@ -97,11 +101,19 @@ function logMessage(message) {
 }
 
 function disconnect() {
-    if (android) android.close();
-    if (ros) ros.close();
+    closeWebsocket(android);
+    closeWebsocket(ros);
+    closeWebsocket(backend);
     closePeerConnection();
     hideMapBlock();
     setConnectedState(false);
+}
+
+function closeWebsocket(ws) {
+    if (ws) {
+        ws.close();
+        ws = null;
+    }
 }
 
 // ==== WebRTC & media setup for video calling ====
