@@ -244,7 +244,8 @@ NAV2D.Navigator = function(options) {
     // update the robots position on the map
     robotMarker.x = pose.x;
     robotMarker.y = -pose.y;
-    if (!initScaleSet) {
+    // TODO: band-aid fix --- without (robotMarker.scaleX == 1 && robotMarker.scaleY == 1) condition, robotMarker.scaleX will only be updated once when stage.scaleX are not yet scaled to the correct values
+    if (!initScaleSet || (robotMarker.scaleX == 1 && robotMarker.scaleY == 1)) {
       robotMarker.scaleX = 1.0 / stage.scaleX;
       robotMarker.scaleY = 1.0 / stage.scaleY;
       initScaleSet = true;

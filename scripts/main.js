@@ -15,9 +15,6 @@ let peerConnection = null;
 let android = null;
 let ros = null;
 let backend = null;
-let activeKeys = new Set();
-
-initBackendConnection(); // TODO: delete this once ASR server is set up
 
 function initConnection() {
     try {
@@ -225,58 +222,16 @@ function setConnectedState(connected) {
     }
 }
 
-// ==== Logic for robot control =====
+// TODO: replace with ASR code once done
+const speechText = document.getElementById('speechText');
 
-// remoteVideo.onkeydown = function(event) {
-//     event.preventDefault();
-//     if (event.repeat) return;
-//     activeKeys.add(event.key);
-//     if (activeKeys.size == 1 && event.key == 'space') {
-//         sendStopMoveCommand();
-//     }
-//     const directions = getDirections();
-//     sendMoveCommand(...directions);
-// }
-
-// remoteVideo.onkeyup = function(event) {
-//     event.preventDefault();
-//     if (event.repeat) return;
-//     activeKeys.delete(event.key);
-//     const directions = getDirections();
-//     if (activeKeys.size == 0) {
-//         sendStopMoveCommand();
-//     } else {
-//         sendMoveCommand(...directions);
-//     }
-// }
-
-// function sendMoveCommand(xDirection, yDirection, rotationDirection) {
-//     const msg = JSON.stringify({
-//         'type': 'move',
-//         'params': [X_VELOCITY * xDirection, Y_VELOCITY * yDirection, ROTATION_VELOCITY * rotationDirection]
-//     });
-//     android.send(msg);
-//     logMessage('Sent message: ' + msg);
-// }
-
-// function sendStopMoveCommand() {
-//     const msg = JSON.stringify({
-//         'type': 'move',
-//         'params': []
-//     });
-//     android.send(msg);
-//     logMessage('Sent message: ' + msg);
-// }
-
-// function getDirections() {
-//     let dir = [0, 0, 0];
-//     for (const item of activeKeys) {
-//         if (item == 'w') dir[0] = 1;
-//         if (item == 's') dir[0] = -1;
-//         if (item == 'a') dir[1] = 1;
-//         if (item == 'd') dir[1] = -1;
-//         if (item == 'q') dir[2] = 1;
-//         if (item == 'e') dir[2] = -1;
-//     }
-//     return dir;
-// }
+speechText.addEventListener('keydown', function(event) {
+    if (event.key === 'Enter') {
+        event.preventDefault();
+        handleRemoteSpeech(speechText.value);
+    }
+    if (event.key === 'F1') {
+        event.preventDefault();
+        sendDialogueText();
+    }
+});

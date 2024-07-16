@@ -86,6 +86,7 @@
 // }
 
 const ROBOT_DIAMETER = 0.65;
+let currentCoordinate = null;
 
 // Re-render the map on window resize
 window.onresize = initMap;
@@ -126,12 +127,22 @@ function initMap() {
         arrow_size: ROBOT_DIAMETER / message.info.resolution * scaleFactor
       });
 
-
       cancelBtn.onclick = () => {
         navClient.navigator.cancelGoal();
       }
 
       listener.unsubscribe();
+    });
+
+    var poseListener = new ROSLIB.Topic({
+      ros: ros,
+      name: '/robot_pose_legacy',
+      messageType: 'geometry_msgs/Pose',
+      throttle_rate: 100
+    });
+    
+    poseListener.subscribe(function(pose) {
+      currentCoordinate = `(${pose.position.x.toFixed(4)}, ${pose.position.y.toFixed(4)}, ${pose.position.z.toFixed(4)}, ${pose.orientation.x.toFixed(4)}, ${pose.orientation.y.toFixed(4)}, ${pose.orientation.z.toFixed(4)}, ${pose.orientation.w.toFixed(4)})`;
     });
 }
 
@@ -148,3 +159,7 @@ function hideMapBlock() {
   navContainer.innerHTML = '';
   mapOverlay.style.display = 'none';
 }
+
+function navigateGoalSequence(goals) {
+  console.log(goals);
+} 

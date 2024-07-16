@@ -10,6 +10,13 @@
     display: none;
 }
 
+.overlay-textarea {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    z-index: 10;
+}
+
 .btn-active {
     --tw-ring-opacity: 1;
     --tw-ring-color: rgb(147 197 253 / var(--tw-ring-opacity));
