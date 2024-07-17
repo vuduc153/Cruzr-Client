@@ -9,7 +9,8 @@ const options = {
     backdropClasses: 'hidden',
     closable: true,
     onHide: () => {
-        console.log('modal is hidden');
+        goalText.innerHTML = '';
+        modalConfirmBtn.onclick = null;
     },
     onShow: () => {
         console.log('modal is shown');
@@ -44,7 +45,6 @@ function showNavPopup(goal) {
 	}
 
 	modalCancelBtn.onclick = () => {
-		modalConfirmBtn.onclick = null;
 		modal.hide();
 	}
 
