@@ -86,7 +86,9 @@
 // }
 
 const ROBOT_DIAMETER = 0.65;
+
 let currentCoordinate = null;
+let navClient = null;
 
 // Re-render the map on window resize
 window.onresize = initMap;
@@ -117,7 +119,7 @@ function initMap() {
       });
 
       // Setup the nav client.
-      var navClient = new NAV2D.OccupancyGridClientNav({
+      navClient = new NAV2D.OccupancyGridClientNav({
         ros : ros,
         rootObject : viewer.scene,
         viewer : viewer,
@@ -159,7 +161,3 @@ function hideMapBlock() {
   navContainer.innerHTML = '';
   mapOverlay.style.display = 'none';
 }
-
-function navigateGoalSequence(goals) {
-  console.log(goals);
-} 

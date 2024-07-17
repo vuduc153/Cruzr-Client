@@ -35,7 +35,6 @@ function initAndroidConnection() {
     const ip = ipInputAndroid.value;
     const wsUrl = `${protocol}${ip}:${port}`;
 
-    // If Android ip is not provided, skip the setup for video call
     if (ip) {
         android = new WebSocket(wsUrl);
 
@@ -67,30 +66,32 @@ function initAndroidConnection() {
 function initROSConnection() {
     const port = "9090";
     const protocol = "ws://";
-    const ip = ipInputROS.value || "localhost";
+    const ip = ipInputROS.value;
     const wsUrl = `${protocol}${ip}:${port}`;
     
-    ros = new ROSLIB.Ros({
-        url : wsUrl
-    });
+    if (ip) {
+        ros = new ROSLIB.Ros({
+            url : wsUrl
+        });
 
-    ros.on("connection", () => {
-        logMessage('Connected to ROS server');
-        setConnectedState(true);
-        initMap();
-        // initJoystick();
-        showMapBlock();
-    });
+        ros.on("connection", () => {
+            logMessage('Connected to ROS server');
+            setConnectedState(true);
+            initMap();
+            // initJoystick();
+            showMapBlock();
+        });
 
-    ros.on("close", () => {
-        logMessage('Disconnected from ROS server');
-        disconnect();
-    });
+        ros.on("close", () => {
+            logMessage('Disconnected from ROS server');
+            disconnect();
+        });
 
-    ros.on("error", error => {
-        logMessage('ROS error: ');
-        logMessage(error);
-    });
+        ros.on("error", error => {
+            logMessage('ROS error: ');
+            logMessage(error);
+        });
+    }
 }
 
 function logMessage(message) {
@@ -229,6 +230,7 @@ speechText.addEventListener('keydown', function(event) {
     if (event.key === 'Enter') {
         event.preventDefault();
         handleRemoteSpeech(speechText.value);
+        speechText.value = '';
     }
     if (event.key === 'F1') {
         event.preventDefault();

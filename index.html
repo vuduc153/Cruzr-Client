@@ -6,6 +6,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="static/style.css">
+    <link href="https://cdn.jsdelivr.net/npm/flowbite@2.4.1/dist/flowbite.min.css" rel="stylesheet" />
     <title>WebSocket Client</title>
 </head>
 <body class="bg-gray-100 text-gray-900 h-screen flex flex-col">
@@ -44,18 +45,38 @@
                 <h2 class="text-l font-bold mb-2">Speech</h2>
                 <textarea id="speechText" class="w-full max-w-lg p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" rows="5"></textarea>
             </div>
+
+            <div
+                id="popup-modal"
+                tabindex="-1"
+                aria-hidden="true"
+                class="fixed left-0 right-0 top-0 z-50 hidden h-[calc(100%-1rem)] max-h-full w-full overflow-y-auto overflow-x-hidden p-4 md:inset-0"
+            >
+                <div class="relative p-4">
+                    <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+                        <div class="py-4 px-10 text-center">
+                            <h3 class="mb-5 text-l font-normal text-gray-500 dark:text-gray-400">Navigate to <span id="goal" class="font-bold">table</span>?</h3>
+                            <button type="button" id="modalConfirmBtn" class="text-white bg-blue-600 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm inline-flex items-center px-3 py-1.5 text-center">
+                                Confirm
+                            </button>
+                            <button type="button" id="modalCancelBtn" class="py-1.5 px-3 ms-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </main>
 </body>
-<!-- <script src="https://cdn.tailwindcss.com"></script> -->
-<script src="scripts/tailwind.js"></script>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/flowbite@2.4.1/dist/flowbite.min.js"></script>
 <script src="scripts/easeljs.min.js"></script>
 <script src="scripts/eventemitter2.min.js"></script>
 <script src="scripts/roslib.min.js"></script>
 <script src="scripts/ros2d.min.js"></script>
-<script src="scripts/nav2d.min.js"></script>
+<script src="scripts/nav2d.js"></script>
 <script type="text/javascript" src="scripts/dialogue.js"></script>
 <script type="text/javascript" src="scripts/main.js"></script>
+<script type="text/javascript" src="scripts/modal.js"></script>
 <script type="text/javascript" src="scripts/navigation.js"></script>
 <script type="text/javascript" src="scripts/joystick.js"></script>
 </html>

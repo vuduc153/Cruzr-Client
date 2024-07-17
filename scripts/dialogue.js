@@ -1,3 +1,5 @@
+"use strict";
+
 let dialogueHistory = "";
 let currentDialogue = "";
 
@@ -19,8 +21,9 @@ function initBackendConnection() {
 
     backend.onmessage = event => {
         const jsonObj = JSON.parse(event.data);
-        const goals = jsonObj.movements.map(item => item.target.coordinate);
-        navigateGoalSequence(goals);
+        // Only perform navigation if the intended actor of the movement is the robot aka `A``
+        const goals = jsonObj.movements.filter(item => item.actor == 'A');
+        showNavPopup(goals[0]);
     };
 }
 

@@ -1,4 +1,5 @@
-// Derived from https://github.com/WHOIGit/ros-web-gamepad
+// Adapted from https://github.com/WHOIGit/ros-web-gamepad
+"use strict";
 
 function initJoystick() {
 
