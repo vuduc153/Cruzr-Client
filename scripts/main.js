@@ -152,6 +152,7 @@ function setupPeerConnection() {
 }
 
 async function setupLocalMediaStream() {
+    // TODO: temp removed for demo
     // const media = await navigator.mediaDevices.getUserMedia({
     //     audio: false,
     //     video: {width: 1280, height: 720}
