@@ -152,22 +152,22 @@ function setupPeerConnection() {
 }
 
 async function setupLocalMediaStream() {
-    const media = await navigator.mediaDevices.getUserMedia({
-        audio: false,
-        video: {width: 1280, height: 720}
-      });
+    // const media = await navigator.mediaDevices.getUserMedia({
+    //     audio: false,
+    //     video: {width: 1280, height: 720}
+    //   });
   
-      // Lower stream output volume since for some reason this cannot be done from Cruzr's end
-      // const audioContext = new AudioContext();
-      // const gainNode = audioContext.createGain();
-      // const audioSource = audioContext.createMediaStreamSource(media);
-      // const audioDestination = audioContext.createMediaStreamDestination();
+    //   // Lower stream output volume since for some reason this cannot be done from Cruzr's end
+    //   // const audioContext = new AudioContext();
+    //   // const gainNode = audioContext.createGain();
+    //   // const audioSource = audioContext.createMediaStreamSource(media);
+    //   // const audioDestination = audioContext.createMediaStreamDestination();
   
-      // audioSource.connect(gainNode);
-      // gainNode.connect(audioDestination);
-      // gainNode.gain.value = 0.5;
+    //   // audioSource.connect(gainNode);
+    //   // gainNode.connect(audioDestination);
+    //   // gainNode.gain.value = 0.5;
   
-      peerConnection.addStream(media);
+    //   peerConnection.addStream(media);
 }
 
 async function setupSDP() {

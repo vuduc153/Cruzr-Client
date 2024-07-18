@@ -42,6 +42,8 @@ function showNavPopup(goal) {
         });
 
 		navClient.navigator.sendGoal(pose);
+
+		modal.hide();
 	}
 
 	modalCancelBtn.onclick = () => {

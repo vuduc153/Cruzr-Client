@@ -153,7 +153,7 @@ NAV2D.Navigator = function(options) {
    *
    * @param pose - the goal pose
    */
-  function sendGoal(pose) {
+  this.sendGoal = (pose) => {
     // create a goal
     var goal = new ROSLIB.Goal({
       actionClient : actionClient,
@@ -282,7 +282,7 @@ NAV2D.Navigator = function(options) {
         position : new ROSLIB.Vector3(coords)
       });
       // send the goal
-      sendGoal(pose);
+      that.sendGoal(pose);
     });
   } else { // withOrientation === true
     // setup a click-and-point listener (with orientation)
@@ -385,7 +385,7 @@ NAV2D.Navigator = function(options) {
           orientation : orientation
         });
         // send the goal
-        sendGoal(pose);
+        that.sendGoal(pose);
       }
     };
 
