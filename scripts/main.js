@@ -31,7 +31,7 @@ function initConnection() {
 
 function initAndroidConnection() {
     const port = "8080";
-    const protocol = "wss://";
+    const protocol = "ws://";
     const ip = ipInputAndroid.value;
     const wsUrl = `${protocol}${ip}:${port}`;
 
