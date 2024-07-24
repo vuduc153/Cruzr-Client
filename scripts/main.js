@@ -20,7 +20,6 @@ function initConnection() {
     try {
         initAndroidConnection();
         initROSConnection();
-        initBackendConnection();
     } catch(exception) {
         disconnect();
         logMessage(exception);
@@ -223,18 +222,3 @@ function setConnectedState(connected) {
         disconnectBtn.style.display = 'block';
     }
 }
-
-// TODO: replace with ASR code once done
-const speechText = document.getElementById('speechText');
-
-speechText.addEventListener('keydown', function(event) {
-    if (event.key === 'Enter') {
-        event.preventDefault();
-        handleRemoteSpeech(speechText.value);
-        speechText.value = '';
-    }
-    if (event.key === 'F1') {
-        event.preventDefault();
-        sendDialogueText();
-    }
-});

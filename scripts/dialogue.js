@@ -3,29 +3,20 @@
 let dialogueHistory = "";
 let currentDialogue = "";
 
-function initBackendConnection() {
-	backend = new WebSocket(`ws://localhost:43007`);
-    backend.binaryType = 'arraybuffer';
+// TODO: replace with ASR code once done
+const speechText = document.getElementById('speechText');
 
-    backend.onopen = () => {
-        console.log('Connected to backend server');
-    };
-
-    backend.onclose = () => {
-        console.log('Disconnected from backend server');
-    };
-
-    backend.onerror = error => {
-        console.error('Backend server error:', error);
-    };
-
-    backend.onmessage = event => {
-        const jsonObj = JSON.parse(event.data);
-        // Only perform navigation if the intended actor of the movement is the robot aka `A``
-        const goals = jsonObj.movements.filter(item => item.actor == 'A');
-        showNavPopup(goals[0]);
-    };
-}
+speechText.addEventListener('keydown', function(event) {
+    if (event.key === 'Enter') {
+        event.preventDefault();
+        handleRemoteSpeech(speechText.value);
+        speechText.value = '';
+    }
+    if (event.key === 'F1') {
+        event.preventDefault();
+        sendDialogueText();
+    }
+});
 
 function sendDialogueText() {
 
@@ -39,9 +30,30 @@ function sendDialogueText() {
     dialogueHistory += currentDialogue;
     currentDialogue = '';
 
-    if (backend && backend.readyState === WebSocket.OPEN) {
-        backend.send(JSON.stringify(message));
-    }
+    const server = 'http://localhost:43001';
+    const endpoint = server + '/parse';
+
+    fetch(endpoint, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(message)
+    })
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      return response.json();
+    })
+    .then(data => {
+      // Only perform navigation if the intended actor of the movement is the robot aka `A``
+      const goals = data.movements.filter(item => item.actor == 'A');
+      showNavPopup(goals[0]); // TODO: plan a sequence of navigation actions
+    })
+    .catch(error => {
+      console.error('Error:', error);
+    });
 }
 
 function handleRemoteSpeech(text) {
