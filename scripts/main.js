@@ -1,8 +1,5 @@
 "use strict";
 
-const X_VELOCITY = 0.2;
-const Y_VELOCITY = 0.2;
-const ROTATION_VELOCITY = 0.2;
 const REMOTE_SPEAKER_VOLUME = 0.5;
 
 const remoteVideo = document.getElementById('remoteVideo');
@@ -14,7 +11,6 @@ const ipInputROS = document.getElementById('ipROS');
 let peerConnection = null;
 let android = null;
 let ros = null;
-let backend = null;
 
 function initConnection() {
     try {
@@ -100,7 +96,6 @@ function logMessage(message) {
 function disconnect() {
     closeWebsocket(android);
     closeWebsocket(ros);
-    closeWebsocket(backend);
     closePeerConnection();
     hideMapBlock();
     setConnectedState(false);
@@ -136,7 +131,6 @@ function setupPeerConnection() {
         }
         if (peerConnection.connectionState == 'disconnected') {
             logMessage('Peer closed');
-            closePeerConnection();
         }
     });
 
@@ -167,7 +161,7 @@ async function setupLocalMediaStream() {
     //   // gainNode.connect(audioDestination);
     //   // gainNode.gain.value = 0.5;
   
-    //   peerConnection.addStream(media);
+    // peerConnection.addStream(media);
 }
 
 async function setupSDP() {
