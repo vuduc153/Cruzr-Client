@@ -11,11 +11,15 @@ const ipInputROS = document.getElementById('ipROS');
 let peerConnection = null;
 let android = null;
 let ros = null;
+let asrRemote = null;
+let asrLocal = null;
 
 function initConnection() {
     try {
         initAndroidConnection();
-        initROSConnection();
+        initRosConnection();
+        initAsrRemoteConnection();
+        initAsrLocalConnection();
     } catch(exception) {
         disconnect();
         logMessage(exception);
@@ -58,7 +62,7 @@ function initAndroidConnection() {
 
 // ==== Connection to ROS =====
 
-function initROSConnection() {
+function initRosConnection() {
     const port = "9090";
     const protocol = "ws://";
     const ip = ipInputROS.value;
@@ -96,6 +100,8 @@ function logMessage(message) {
 function disconnect() {
     closeWebsocket(android);
     closeWebsocket(ros);
+    closeWebsocket(asrRemote);
+    closeWebsocket(asrLocal);
     closePeerConnection();
     hideMapBlock();
     setConnectedState(false);
@@ -106,6 +112,88 @@ function closeWebsocket(ws) {
         ws.close();
         ws = null;
     }
+}
+
+// Connection to ASR server
+
+function initAsrRemoteConnection() {
+    const port = "43007";
+    const protocol = "ws://";
+    const ip = "localhost";
+    const wsUrl = `${protocol}${ip}:${port}`;
+
+    asrRemote = new WebSocket(wsUrl);
+    asrRemote.binaryType = 'arraybuffer';
+
+    asrRemote.onopen = () => {
+        logMessage('Connected to ASR remote server');
+    };
+
+    asrRemote.onmessage = event => {
+        updateTranscriptionState(remoteState, localState, event.data);
+    };
+
+    asrRemote.onclose = () => {
+        logMessage('Disconnected from ASR remote server');
+    };
+
+    asrRemote.onerror = error => {
+        logMessage('ASR error: ');
+        logMessage(error);
+    };
+}
+
+function initAsrLocalConnection() {
+    const port = "43006";
+    const protocol = "ws://";
+    const ip = "localhost";
+    const wsUrl = `${protocol}${ip}:${port}`;
+
+    asrLocal = new WebSocket(wsUrl);
+    asrLocal.binaryType = 'arraybuffer';
+
+    asrLocal.onopen = () => {
+        logMessage('Connected to ASR local server');
+    };
+
+    asrLocal.onmessage = event => {
+        updateTranscriptionState(localState, remoteState, event.data);
+    };
+
+    asrLocal.onclose = () => {
+        logMessage('Disconnected from ASR local server');
+    };
+
+    asrLocal.onerror = error => {
+        logMessage('ASR error: ');
+        logMessage(error);
+    };
+}
+
+function startAudioTranscription(stream, asr) {
+    const audioContext = new AudioContext({ latencyHint: 'interactive' });
+
+    audioContext.audioWorklet.addModule('scripts/voice-processor.js')
+        .then(function() {
+            
+            const workletNode = new AudioWorkletNode(audioContext, 'voice-processor');
+            workletNode.port.postMessage({ sampleRate: audioContext.sampleRate });
+
+            workletNode.port.onmessage = function(event) {
+                const outputData = event.data.buffer;
+
+                if (asr && asr.readyState === WebSocket.OPEN) {
+                    asr.send(outputData);
+                }
+            };
+
+            const mediaStream = audioContext.createMediaStreamSource(stream);
+            mediaStream.connect(workletNode);
+            workletNode.connect(audioContext.destination);
+        })
+        .catch(function(err) {
+            console.error('Error initializing audio context or processing audio.', err);
+        });
 }
 
 // ==== WebRTC & media setup for video calling ====
@@ -136,7 +224,8 @@ function setupPeerConnection() {
 
     peerConnection.addEventListener('addstream', event => {
         logMessage('Remote stream added.');
-        remoteVideo.srcObject = event.stream;
+        // remoteVideo.srcObject = event.stream;
+        startAudioTranscription(event.stream, asrRemote);
     })
 
     peerConnection.addEventListener('removestream', event => {
@@ -150,6 +239,12 @@ async function setupLocalMediaStream() {
     //     audio: false,
     //     video: {width: 1280, height: 720}
     //   });
+    const media = await navigator.mediaDevices.getUserMedia({
+        audio: true,
+        video: false
+    })
+
+    startAudioTranscription(media, asrLocal);
   
     //   // Lower stream output volume since for some reason this cannot be done from Cruzr's end
     //   // const audioContext = new AudioContext();

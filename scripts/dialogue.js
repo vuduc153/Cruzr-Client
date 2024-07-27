@@ -1,5 +1,19 @@
 "use strict";
 
+const terminatingCharacters = new Set(['?', '.', '!']);
+
+let localState = {
+    label: "A",
+    buffer: "",
+    silence: false
+};
+
+let remoteState = {
+    label: "B",
+    buffer: "",
+    silence: false
+};
+
 let dialogueHistory = "";
 let currentDialogue = "";
 
@@ -7,16 +21,46 @@ let currentDialogue = "";
 const speechText = document.getElementById('speechText');
 
 speechText.addEventListener('keydown', function(event) {
-    if (event.key === 'Enter') {
-        event.preventDefault();
-        handleRemoteSpeech(speechText.value);
-        speechText.value = '';
-    }
     if (event.key === 'F1') {
         event.preventDefault();
-        sendDialogueText();
+        // sendDialogueText(); // TODO
+        console.log(currentDialogue);
     }
 });
+
+function updateTranscriptionState(state, otherState, payload) {
+    const obj = JSON.parse(payload);
+
+    state.buffer += obj.transcript;
+
+    if (terminatingCharacters.has(state.buffer.trim().at(-1))) {
+        currentDialogue += `${state.label}: ${state.buffer}\n`;
+        state.buffer = '';
+    }
+
+    // currently not receiving speech transcript from both sources
+    if (!state.silence && otherState.silence && obj.silence) {
+        // handle pending buffers
+        handlePendingBuffers();
+
+        // TODO
+        console.log("prompt LLM");
+        console.log(currentDialogue);
+    }
+    state.silence = obj.silence;
+}
+
+function handlePendingBuffers() {
+    handlePendingBuffer(localState);
+    handlePendingBuffer(remoteState);
+}
+
+function handlePendingBuffer(state) {
+    if (state.buffer) {
+        currentDialogue += `${state.label}: ${state.buffer}\n`;
+        state.buffer = '';
+    }
+}
 
 function sendDialogueText() {
 
@@ -54,8 +98,4 @@ function sendDialogueText() {
     .catch(error => {
       console.error('Error:', error);
     });
-}
-
-function handleRemoteSpeech(text) {
-	currentDialogue += `A: ${text}\n`;
 }
